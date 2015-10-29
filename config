@@ -1,0 +1,5 @@
+NAME=pi3
+PORT=4001
+USER=softioc
+HOST=xf03idc-ioc1
+CHDIR="$CHDIR/iocBoot/iocpi3"

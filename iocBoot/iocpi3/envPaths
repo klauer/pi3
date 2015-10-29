@@ -1,0 +1,5 @@
+epicsEnvSet("ARCH","linux-x86_64")
+epicsEnvSet("IOC","iocpi3")
+epicsEnvSet("TOP","/home/klauer/Repos/pi3")
+epicsEnvSet("SUPPORT","/epics/support")
+epicsEnvSet("EPICS_BASE","/usr/lib/epics")

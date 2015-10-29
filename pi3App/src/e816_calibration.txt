@@ -1,0 +1,33 @@
+axis[A].VADGain = 0.996800
+axis[A].VADOffset = 13.582600
+axis[A].PADGain = 0.999000
+axis[A].PADOffset = -0.492100
+axis[A].DAGain = 0.998700
+axis[A].DAOffset = 1.244600
+axis[A].Ksen = 4.500000
+axis[A].Osen = 0.000000
+axis[A].Kpzt = 10.015900
+axis[A].Opzt = -0.064800
+
+axis[B].VADGain = 0.996800
+axis[B].VADOffset = 13.582600
+axis[B].PADGain = 0.999000
+axis[B].PADOffset = -0.492100
+axis[B].DAGain = 0.998700
+axis[B].DAOffset = 1.244600
+axis[B].Ksen = 4.500000
+axis[B].Osen = 0.000000
+axis[B].Kpzt = 10.015900
+axis[B].Opzt = -0.064800
+
+axis[C].VADGain = 1.010800
+axis[C].VADOffset = 13.550800
+axis[C].PADGain = 0.998200
+axis[C].PADOffset = -0.493400
+axis[C].DAGain = 1.001500
+axis[C].DAOffset = 1.241700
+axis[C].Ksen = 4.500000
+axis[C].Osen = 0.000000
+axis[C].Kpzt = 10.015900
+axis[C].Opzt = -0.036500
+

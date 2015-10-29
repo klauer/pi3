@@ -1,0 +1,18 @@
+file "motor.db"
+{
+  pattern
+  {    P,     M,           DTYP,    PORT, ADDR,     DESC,  EGU, DIR, VMAX, VELO, VBAS, ACCL, BDST, BVEL, BACC,     MRES, PREC,DHLM,   DLLM, RTRY,   RDBD,  DLY, OFF, INIT }
+  { PI3:,  "ax1", "asynMotor",  "PI3",    0, "PI3 x",   um, Pos,  1.0,  0.1, 0.10,  0.1,    0,    1,   .1, 0.000001,    8,  35,      0,    0, 0.0005, 0.05,   0,   "" }
+  # { PI3:,  "ax2", "asynMotor",  "PI3",    1, "PI3 y",   um, Pos,  1.0,  0.1, 0.10,  0.1,    0,    1,   .1, 0.000001,    8,  35,      0,    0, 0.0005, 0.05,   0,   "" }
+  # { PI3:,  "ax3", "asynMotor",  "PI3",    2, "PI3 z",   um, Pos,  1.0,  0.1, 0.10,  0.1,    0,    1,   .1, 0.000001,    8,  35,      0,    0, 0.0005, 0.05,   0,   "" }
+}
+
+
+file "asynRecord.db"
+{
+  pattern
+  {    P,         R,      PORT,   ADDR,   OMAX, IMAX }
+  {PI3:,        asyn,    PI3,      0,    256,  256 }
+}
+
+
