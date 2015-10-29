@@ -42,7 +42,6 @@ public:
   virtual asynStatus writeReadInt(int &value, const char* fmt, ...);
   virtual asynStatus writeReadDouble(double &value, const char* fmt, ...);
   virtual asynStatus writeReadDouble(double &value, const char* fmt, va_list);
-  virtual asynStatus queryPositions();
   virtual asynStatus queryVersion();
 
   double getUnitScale() {

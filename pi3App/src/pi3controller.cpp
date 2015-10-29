@@ -228,49 +228,6 @@ asynStatus PI3Controller::writeRead(char *input, size_t* nread, const char *fmt,
   return ret;
 }
 
-asynStatus PI3Controller::queryPositions() {
-/*
-  size_t num_read=0;
-  char input[PI3_STRING_SIZE];
-  double positions[PI3_AXES];
-  char *pos_str[PI3_AXES];
-  static const char* functionName = "PI3Controller::queryPositions";
-  asynStatus ret = writeRead(input, &num_read, "measure");
-  if (ret != asynSuccess || num_read < 10) // 10 == len("rk,n,x.xxx")
-    return asynError;
-
-  char *encoder_pos = input;
-
-  // Format: aw,0.000,0.000,0.000
-  // Find the commas, replace them with null terminators, and store the
-  // start of the position strings.
-  for (int i=0; i < PI3_AXES; i++) {
-      encoder_pos = strnchr(encoder_pos+1, PI3_STRING_SIZE, ',');
-      if (!encoder_pos) {
-        return asynError;
-      }
-
-      encoder_pos[0] = 0;
-      pos_str[i] = &encoder_pos[1];
-  }
-
-  for (int i=0; i < PI3_AXES; i++) {
-    positions[i] = atof(pos_str[i]);
-#if DEBUG
-    fprintf(stderr, "positions[%d] = %g\n", i, positions[i]);
-#endif
-    if (i < numAxes_) {
-        PI3Axis *axis=getAxis(i);
-        axis->encoderPos_ = positions[i];
-        axis->setDoubleParam(motorEncoderPosition_, positions[i] * unitScale_);
-        axis->setDoubleParam(motorPosition_, positions[i] * unitScale_);
-    }
-  }
-*/
-  return asynSuccess;
-
-}
-
 asynStatus
 PI3Controller::checkError() {
   int errno;
