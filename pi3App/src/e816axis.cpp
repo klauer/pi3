@@ -54,8 +54,8 @@ asynStatus E816Axis::setClosedLoop(bool enabled) {
 #endif
 }
 
-asynStatus E816Axis::poll(bool *moving) {
-  this->PI3Axis::poll(moving);
+asynStatus E816Axis::poll(bool *report_moving) {
+  this->PI3Axis::poll(report_moving);
   int value;
 
   asynStatus ret = pc_->writeReadInt(value, "OVF? %c", id_);
@@ -63,6 +63,20 @@ asynStatus E816Axis::poll(bool *moving) {
     value = value ? 1 : 0;
     setDoubleParam(pc_->motorLowLimit_, value);
     setDoubleParam(pc_->motorHighLimit_, value);
+  }
+
+  int axis_moving=0;
+  pc_->getIntegerParam(axisNo_, pc_->motorStatusMoving_, &axis_moving);
+
+  if (axis_moving) {
+    if (asynSuccess == pc_->writeReadInt(value, "ONT? %c", id_)) {
+      // check on target status
+      if (value) {
+        // if moving and on-target, set motion finished
+        finished_moving();
+        *report_moving = false;
+      }
+    }
   }
 
   return asynSuccess;
@@ -129,6 +143,8 @@ asynStatus E816Axis::move(double position, int relative, double min_velocity,
   } else {
     ret = pc_->write("MOV %c %f", id_, position);
   }
+  setIntegerParam(pc_->motorStatusMoving_, true);
+  setIntegerParam(pc_->motorStatusDone_, false);
 #endif
 
   return ret;
