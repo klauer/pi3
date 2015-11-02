@@ -82,3 +82,7 @@ asynStatus PI3Axis::setIGain(epicsFloat64 value) {
 asynStatus PI3Axis::setDGain(epicsFloat64 value) {
   return asynError;
 }
+
+asynStatus PI3Axis::isClosedLoop(bool &closed) {
+  return asynError;
+}

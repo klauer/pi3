@@ -4,7 +4,7 @@
 #define PI3_E816_MAX_AXES   4
 static const char *e816_axes="ABCD";
 
-#define NO_MOVEMENT
+// #define NO_MOVEMENT
 
 
 E816Axis::E816Axis(PI3Controller *controller, int axis_num)
@@ -83,14 +83,20 @@ asynStatus E816Axis::poll(bool *report_moving) {
 }
 
 asynStatus E816Axis::queryPosition() {
-  asynStatus ret = pc_->writeReadDouble(encoderPos_, "POS? %c", id_);
-  if (ret == asynSuccess) {
-    double scaled=encoderPos_ * pc_->getUnitScale();
+  double scaled;
+  double volts;
+  if (pc_->writeReadDouble(encoderPos_, "POS? %c", id_) == asynSuccess) {
+    scaled=encoderPos_ * pc_->getUnitScale();
     setDoubleParam(pc_->motorEncoderPosition_, scaled);
-    setDoubleParam(pc_->motorPosition_, scaled);
-    callParamCallbacks();
+    // setDoubleParam(pc_->motorPosition_, scaled);
   }
 
+  if (pc_->writeReadDouble(volts, "VOL? %c", id_) == asynSuccess) {
+    scaled=volts * pc_->getUnitScale();
+    setDoubleParam(pc_->motorPosition_, scaled);
+  }
+
+  callParamCallbacks();
   return asynSuccess;
 }
 
@@ -107,10 +113,21 @@ asynStatus E816Axis::moveVelocity(double min_velocity, double max_velocity, doub
   return asynError;
 }
 
-asynStatus E816Axis::home(double min_velocity, double max_velocity, double acceleration, int forwards) {
-  int closed_loop;
+asynStatus E816Axis::isClosedLoop(bool &closed) {
+  int i_closed_loop;
 
-  if (asynSuccess != pc_->writeReadInt(closed_loop, "SVO? %c", id_)) {
+  if (asynSuccess != pc_->writeReadInt(i_closed_loop, "SVO? %c", id_)) {
+    return asynError;
+  }
+
+  closed = (i_closed_loop != 0);
+  return asynSuccess;
+}
+
+asynStatus E816Axis::home(double min_velocity, double max_velocity, double acceleration, int forwards) {
+  bool closed_loop;
+
+  if (asynError == isClosedLoop(closed_loop)) {
     return asynError;
   }
 
@@ -121,7 +138,7 @@ asynStatus E816Axis::home(double min_velocity, double max_velocity, double accel
   pc_->write("SVA %c 0.0", id_);
 
   // Reset the original closed-loop status
-  return pc_->write("SVO %c %d", closed_loop);
+  return pc_->write("SVO %c %d", id_, closed_loop ? 1 : 0);
 }
 
 asynStatus E816Axis::move(double position, int relative, double min_velocity,
@@ -134,14 +151,33 @@ asynStatus E816Axis::move(double position, int relative, double min_velocity,
   asynPrint(pc_->getAsynUser(), ASYN_TRACE_FLOW,
             "%s:%s: axis %d: move to %g\n",
             driverName, functionName, id_, position);
-  printf("%s:%s: axis %d: move to %g\n",
-         driverName, functionName, id_, position);
+
+  bool closed_loop;
+
+  if (asynError == isClosedLoop(closed_loop)) {
+    asynPrint(pc_->getAsynUser(), ASYN_TRACE_ERROR,
+              "%s:%s: axis %c: can't determine closed-loop status\n",
+              driverName, functionName, id_);
+    return asynError;
+  }
 
 #ifndef NO_MOVEMENT
-  if (relative) {
-    ret = pc_->write("MVR %c %f", id_, position);
+  if (closed_loop) {
+    printf("%s:%s: axis %d: closed-loop move to %g\n",
+           driverName, functionName, id_, position);
+    if (relative) {
+      ret = pc_->write("MVR %c %f", id_, position);
+    } else {
+      ret = pc_->write("MOV %c %f", id_, position);
+    }
   } else {
-    ret = pc_->write("MOV %c %f", id_, position);
+    printf("%s:%s: axis %d: open-loop move to %g\n",
+           driverName, functionName, id_, position);
+    if (relative) {
+      ret = pc_->write("SVR %c %f", id_, position);
+    } else {
+      ret = pc_->write("SVO %c %f", id_, position);
+    }
   }
   setIntegerParam(pc_->motorStatusMoving_, true);
   setIntegerParam(pc_->motorStatusDone_, false);

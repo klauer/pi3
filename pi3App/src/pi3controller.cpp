@@ -12,6 +12,7 @@ E816Controller::E816Controller(const char *portName, const char *PI3PortName,
     pAxis = new E816Axis(this, axis);
     // has PID settings
     pAxis->setIntegerParam(motorStatusGainSupport_, 1);
+    pAxis->setIntegerParam(motorStatusHasEncoder_, 1);
   }
   startPoller(pollPeriod/1000., pollPeriod/1000., 2);
 
@@ -236,4 +237,5 @@ PI3Controller::checkError() {
               "%s: error code: %d\n",
               __func__, errno);
   }
+  return asynSuccess;
 }

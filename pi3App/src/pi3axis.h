@@ -21,6 +21,7 @@ public:
 
   /* And these are specific to this class: */
   virtual asynStatus setClosedLoop(bool enabled);
+  virtual asynStatus isClosedLoop(bool &closed);
   virtual asynStatus queryPosition();
 
   virtual asynStatus setPGain(epicsFloat64 value);
@@ -65,6 +66,7 @@ public:
   virtual asynStatus poll(bool *moving);
 
   virtual asynStatus setClosedLoop(bool enabled);
+  virtual asynStatus isClosedLoop(bool &closed);
   virtual asynStatus queryPosition();
 
   virtual asynStatus setPGain(epicsFloat64 value);

@@ -8,10 +8,6 @@
 
 #define PI3_STATUS_STRING        "PI3_STATUS_STRING"
 
-// #define PI3_ERRORS_PARAM         "Parameter error in command: "
-
-// static const char *PI3_IGNORE_STRINGS[] = { "PI33CL>", NULL };
-
 static const char* driverName = "PI3";
 
 /* NOTE on unitScale_:
